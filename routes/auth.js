@@ -1,19 +1,15 @@
 const router = require('express').Router();
-const User = require('../models/User');
+const { register } = require('../controllers/auth');
 
-router.post('/', (req, res) => {
-    const { email, username, name, password, role } = req.body;
-    const user = new User({
-        email,
-        username,
-        name,
-        password,
-        role
-    })
-    res.send({
-        success: true,
-        message: "User registered successfully"
-    })
+
+// Students registration route
+router.post('/register-student', async (req, res) => {
+    await register(req, res, "student");
 });
+
+//Tutor registration route
+router.post('/register-tutor', async(req, res) => {
+    await register(req, res, "tutor");
+})
 
 module.exports = router;
