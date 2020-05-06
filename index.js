@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const app = express();
 require('dotenv').config();
 const authRoutes = require('./routes/auth');
+const categoryRoutes = require('./routes/category');
+const subjectRoutes = require('./routes/subject');
 
 //registering middlewares
 app.use(express.json());
@@ -10,6 +12,8 @@ app.use(express.urlencoded({extended: false}));
 
 // registering route middlewares
 app.use(authRoutes);
+app.use(categoryRoutes);
+app.use(subjectRoutes);
 
 const PORT = 3000 || process.env.PORT;
 
