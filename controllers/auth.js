@@ -111,7 +111,7 @@ exports.login = async(req, res, role) => {
             email: user.email,
             token: user.generateToken()
         }
-        res.status(200).send(result);
+        res.status(200).header('auth-token', result.token).send(result);
 
     } catch(err) {
         res.send(err.details[0].message);

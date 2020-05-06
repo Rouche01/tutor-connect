@@ -33,7 +33,7 @@ userSchema.methods.generateToken = function() {
         email: user.email,
         username: user.username,
         role: user.role    
-    }, 'process.env.SECRET_KEY', {expiresIn: "3 days"});
+    }, process.env.SECRET_KEY, {expiresIn: "3 days"});
     // user.tokens = token;
     // await user.save();
     return token;

@@ -78,7 +78,7 @@ exports.addSubject = async (req, res, next) => {
     } catch(err) {
         res.status(400).json({
             status: false,
-            message: err.errors.detail.message
+            message: err.errors
         })
     }
 }
