@@ -131,20 +131,20 @@ exports.updateSubject = async (req, res, next) => {
 
 exports.deleteSubject = async (req, res, next) => {
     //check if category exist
-    const categoryExist = await Category.findOne({name: req.params.name});
-    if(!categoryExist) return res.status(404).json({
-        status: false,
-        message: "This category does not exist"
-    });
-
-    // check if the subject exists in the category
-    const retrievedSubject = await findSubject(req.params.name, req.params.id);
-    if (!retrievedSubject) return res.status(400).json({
-        status: false,
-        message: "This subject does not exist in this category"
-    });
-
     try {
+        const categoryExist = await Category.findOne({name: req.params.name});
+        if(!categoryExist) return res.status(404).json({
+            status: false,
+            message: "This category does not exist"
+        });
+
+        // check if the subject exists in the category
+        const retrievedSubject = await findSubject(req.params.name, req.params.id);
+        if (!retrievedSubject) return res.status(400).json({
+            status: false,
+            message: "This subject does not exist in this category"
+        });
+
         await Subject.deleteOne({_id: req.params.id});
         res.status(200).json({
             status: false,
