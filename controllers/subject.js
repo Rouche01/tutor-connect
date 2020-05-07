@@ -2,6 +2,20 @@ const Subject = require('../models/Subject');
 const Category = require('../models/Category');
 
 
+const findSubject = async(paramName, paramId) => {
+    try {
+        const populatedCategory = await Category.findOne({name: paramName}).populate("subjects").exec();
+        const subjectList = populatedCategory.subjects;
+        return subjectList.find(subject => subject._id == paramId);
+    } catch(err) {
+        res.status(400).json({
+            status: false,
+            message: "unable to retrieve subject list"
+        });
+    }
+};
+
+
 exports.getSubjects = async (req, res, next) => {
     //check if category exist
     const categoryExist = await Category.findOne({name: req.params.name});
@@ -31,22 +45,12 @@ exports.getSubject = async (req, res, next) => {
         status: false,
         message: "This category does not exist"
     });
-    Category.findOne({name: req.params.name}).populate("subjects").exec((err, populatedCategory) => {
-        if(err) {
-            res.status(400).json({
-                status: false,
-                message: "unable to retrieve subject list"
-            })
-        } else {
-            const subjectList = populatedCategory.subjects;
-            const retrievedSubject = subjectList.find(subject => subject._id == req.params.id);
-            if (!retrievedSubject) return res.status(400).json({
-                status: false,
-                message: "This subject does not exist in this category"
-            });
-            res.status(200).send(retrievedSubject);
-        }
-    } );
+    const retrievedSubject = await findSubject(req.params.name, req.params.id);
+    if (!retrievedSubject) return res.status(400).json({
+        status: false,
+        message: "This subject does not exist in this category"
+    });
+    res.status(200).send(retrievedSubject);
 
 }
 
@@ -82,3 +86,75 @@ exports.addSubject = async (req, res, next) => {
         })
     }
 }
+
+exports.updateSubject = async (req, res, next) => {
+    // check for any update data in the request body
+    const subjectUpdate = req.body;
+     if(!subjectUpdate.title && !subjectUpdate.detail) return res.status(400).json({
+        status: false,
+        message: "No update was sent"
+    });
+
+     //check if category exist
+     const categoryExist = await Category.findOne({name: req.params.name});
+     if(!categoryExist) return res.status(404).json({
+         status: false,
+         message: "This category does not exist"
+     });
+     
+    const retrievedSubject = await findSubject(req.params.name, req.params.id);
+    if (!retrievedSubject) return res.status(400).json({
+        status: false,
+        message: "This subject does not exist in this category"
+    });
+    let newValues = { $set: {  } };
+    if (subjectUpdate.title) { 
+        newValues.$set.title = subjectUpdate.title;
+    }
+    if (subjectUpdate.detail) {
+        newValues.$set.detail = subjectUpdate.detail;
+    }
+
+    try{
+        const updatedSubject = await Subject.updateOne({_id: req.params.id}, newValues);
+        res.status(200).json({
+            status: true,
+            message: `${updatedSubject.nModified} subject was modified successfully`
+        })
+    } catch(err) {
+        res.status(500).send(err);
+    }
+    
+
+}
+
+
+exports.deleteSubject = async (req, res, next) => {
+    //check if category exist
+    const categoryExist = await Category.findOne({name: req.params.name});
+    if(!categoryExist) return res.status(404).json({
+        status: false,
+        message: "This category does not exist"
+    });
+
+    // check if the subject exists in the category
+    const retrievedSubject = await findSubject(req.params.name, req.params.id);
+    if (!retrievedSubject) return res.status(400).json({
+        status: false,
+        message: "This subject does not exist in this category"
+    });
+
+    try {
+        await Subject.deleteOne({_id: req.params.id});
+        res.status(200).json({
+            status: false,
+            message: "Subject has been successfully deleted",
+            deletedSubject: retrievedSubject
+        });
+    } catch(err) {
+        res.status(500).json({
+            status: false,
+            message: err
+        })
+    }
+};
