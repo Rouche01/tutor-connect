@@ -20,6 +20,18 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    lessons: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Lesson'
+        }
+    ],
+    subjects: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Subject'
+        }
+    ],
     role: {
         type: String,
         default: "student"
