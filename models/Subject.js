@@ -10,7 +10,13 @@ const subjectSchema = new Schema({
     detail: {
         type: String,
         required: true
-    }
+    },
+    tutors: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 });
 
 module.exports = mongoose.model("Subject", subjectSchema);
