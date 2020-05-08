@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const subjectRoutes = require('./routes/subject');
 const lessonRoutes = require('./routes/lesson');
+const tutorRoutes = require('./routes/tutor');
 
 //registering middlewares
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(authRoutes);
 app.use(categoryRoutes);
 app.use(subjectRoutes);
 app.use(lessonRoutes);
+app.use(tutorRoutes);
 
 const PORT = 3000 || process.env.PORT;
 
