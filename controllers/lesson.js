@@ -13,7 +13,7 @@ const isEmpty = (obj) => {
 
 exports.bookLesson = async (req, res, next) => {
     // check if user exist
-    const student = await User.findOne({username: req.params.username});
+    const student = req.currentUser;
     if(!student) return res.status(404).json({
         status: false,
         message: "This user does not exist"
