@@ -12,6 +12,10 @@ const tutorRoutes = require('./routes/tutor');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+app.get('/', (req, res) => {
+    res.send("Welcome to the API for Tutors Connect");
+})
+
 // registering route middlewares
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', categoryRoutes);
