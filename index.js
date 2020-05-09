@@ -13,11 +13,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // registering route middlewares
-app.use(authRoutes);
-app.use(categoryRoutes);
-app.use(subjectRoutes);
-app.use(lessonRoutes);
-app.use(tutorRoutes);
+app.use('/api/v1', authRoutes);
+app.use('/api/v1', categoryRoutes);
+app.use('/api/v1', subjectRoutes);
+app.use('/api/v1', lessonRoutes);
+app.use('/api/v1', tutorRoutes);
 
 const PORT = 3000 || process.env.PORT;
 
