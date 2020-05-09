@@ -44,7 +44,8 @@ userSchema.methods.generateToken = function() {
         name: user.name,
         email: user.email,
         username: user.username,
-        role: user.role    
+        role: user.role,
+        isAdmin: user.isAdmin    
     }, process.env.SECRET_KEY, {expiresIn: "3 days"});
     // user.tokens = token;
     // await user.save();

@@ -68,14 +68,17 @@ exports.registerSubject = async(req, res, next) => {
         const tutor = req.currentUser;
 
         // convert categoryName to regexp to make it case insensitive during query
-        const categoryNameRegExp = new RegExp("^" + categoryName + "$", "i");
 
         // populate category's subjects from request body category name - The aim is to find ref to the subject to add
-        const category = await Category.findOne({ name: { $regex: categoryNameRegExp } } ).populate("subjects").exec();
+        const category = await Category.findOne({ name: { $regex: categoryName, $options: "i" } } ).populate("subjects").exec();
 
         // from the populated subjects find the particular subject using subject title from request body
-        const subject = category.subjects.find(subject => 
-            subject.title.toLowerCase() === subjectTitle.toLowerCase());
+        const subject = category.subjects.find(initSubject => 
+            initSubject.title.toLowerCase() === subjectTitle.toLowerCase());
+        if(!subject) return res.status(404).json({
+            status: true,
+            message: "This subject does not exist in this category"
+        })
         const { title } = subject;
 
         // populate tutor subjects
@@ -94,12 +97,14 @@ exports.registerSubject = async(req, res, next) => {
         await subject.save();
         res.status(200).json({
             status: true,
-            message: "You have registered to take a subject successfully!"
+            message: "You have registered to take a subject successfully!",
         });
     } catch(err) {
+        const tutor = req.currentUser
         res.status(500).json({
             status: false,
-            message: err
+            message: err,
+            tutor
         });
     }
 }
@@ -177,7 +182,7 @@ exports.deleteTutorSubject = async(req, res, next) => {
         })
         const deletedSubject = await Subject.deleteOne({_id: req.params.subject_id});
         res.status(200).json({
-            status: false,
+            status: true,
             message: "Subject has been successfully deleted",
             deletedSubject: subjectExist
         });
@@ -185,4 +190,22 @@ exports.deleteTutorSubject = async(req, res, next) => {
         res.status(500).send(err);
     }
     
+}
+
+exports.queryTutor = async (req, res, next) => {
+    try {
+        if (!req.query.firstname) {
+            const tutorList = await User.find({role: "tutor"}).sort({field: 'asc'}).exec();
+            return res.status(200).send(tutorList);
+        }
+        const retrievedTutor = await User.
+            find({name: { $regex: req.query.firstname, $options: "i" }, role: "tutor"}).
+            sort({field: 'asc'}).exec();
+        res.status(200).send(retrievedTutor);
+    } catch(err) {
+        res.status(500).json({
+            status: false,
+            message: "Unable to retrieve tutor(s)"
+        })
+    }
 }
