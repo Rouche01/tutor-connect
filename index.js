@@ -23,7 +23,7 @@ app.use('/api/v1', subjectRoutes);
 app.use('/api/v1', lessonRoutes);
 app.use('/api/v1', tutorRoutes);
 
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT;
 
 // connecting to the database and starting the server
 const startApp = async () => {
