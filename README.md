@@ -2,8 +2,8 @@
 
 This **REST**ful api for an app where a student can book lessons with tutors who have registered to take subjects in different categories. It accepts raw JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 
-**Login Details for Admin:** 
-username: john.doe
+**Login Details for Admin:**   
+username: john.doe  
 password: root-admin01
 
 ## Registration & Login
