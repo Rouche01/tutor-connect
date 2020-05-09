@@ -37,3 +37,13 @@ exports.checkRole = (requiredRole) => {
     }
 };
 
+exports.checkAdmin = () => {
+    return (req, res, next) => {
+        if(!req.currentUser.isAdmin) return res.status(401).json({
+            status: false,
+            message: "Access denied, you do not have the required role to access this resource"
+        })
+        return next();
+    }
+};
+

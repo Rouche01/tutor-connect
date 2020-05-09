@@ -18,4 +18,9 @@ const categorySchema = new Schema ({
     ]
 });
 
+categorySchema.pre('remove', function(next) {
+    const Subject = require('../models/Subject');
+    Subject.remove({ _id: { $in: this.subjects } }).then(() => next());
+});
+
 module.exports = mongoose.model("Category", categorySchema);

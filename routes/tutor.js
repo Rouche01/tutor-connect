@@ -5,11 +5,15 @@ const { getTutors,
     registerSubject, 
     getTutorSubjects, 
     updateTutorSubject,
-    deleteTutorSubject } = require('../controllers/tutor');
+    deleteTutorSubject,
+    queryTutor } = require('../controllers/tutor');
 const { isAuth, checkRole } = require('../middlewares/auth.js');
 
 // Retrieving all tutors by admin
-router.get('/tutor', isAuth, checkRole('admin'), getTutors);
+router.get('/tutors', isAuth, checkRole('admin'), getTutors);
+
+// Query route for subjects
+router.get('/tutor', isAuth, queryTutor);
 
 // Retrieving a tutor by id
 router.get('/tutor/:tutor_id', isAuth, checkRole('admin'), getTutor);

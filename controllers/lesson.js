@@ -101,12 +101,12 @@ exports.deleteLesson = async(req, res, next) => {
         const lessonExist = await Lesson.findOne({_id: req.params.lesson_id});
         if(!lessonExist) return res.status(404).json({
             status: false,
-            message: "This category does not exist"
+            message: "This lesson does not exist"
         });
         await Lesson.deleteOne({_id: req.params.lesson_id});
         res.status(200).json({
-            status: false,
-            message: "Subject has been successfully deleted",
+            status: true,
+            message: "Lesson has been successfully deleted",
             deletedSubject: lessonExist
         });
     } catch(err) {

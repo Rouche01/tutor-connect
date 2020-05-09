@@ -6,7 +6,7 @@ const { isAuth, checkRole } = require('../middlewares/auth');
 router.post('/lesson', isAuth, checkRole('student'), bookLesson);
 
 // retrieving all lessons
-router.get('/lesson', isAuth, checkRole('admin'), getLessons);
+router.get('/lessons', isAuth, checkRole('admin'), getLessons);
 
 // retrieve a lesson by its id
 router.get('/lesson/:lesson_id', isAuth, checkRole('admin'), getLesson);
