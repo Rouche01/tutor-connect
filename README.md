@@ -51,7 +51,7 @@ This is the API collection for categories
 #### Adding a subject to a category
 ### POST https://whispering-woodland-21852.herokuapp.com/api/v1/category/:category_name/subject
 **Headers:**  
-auth-token (only logged in users can use)  
+auth-token (only logged in admin can send request)  
 Content-Type: application/json  
 
 
